@@ -1,13 +1,108 @@
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+  <meta charset="utf-8">
+  <meta name=“viewport” content=“width=device-width, initial-scale=1.0">
+  <meta http-equiv=“X-UA-Compatible” content=“ie=edge”>
+  <style type="text/css"></style>
+  <title>Giftastic Places!</title>
 </head>
 
-
 <body>
-    
-</body>
-</html>
+ 
+   <div id="buttons-view"></div>
+
+  <div class="container">
+    <h1>Giftastic places</h1>
+
+    <form id="place-form">
+
+      <label for="place-input">Add a place!</label>
+      <input type="text" id="place-input"><br>
+
+      <input id="add-place" type="submit" value="Search">
+
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+   
+      var places = [];
+
+      function renderButtons() {
+
+
+        $("#buttons-view").empty();
+
+        // Looping through the array of places
+        for (var i = 0; i < places.length; i++) {
+
+          var a = $("<button>");
+
+           a.addClass("place");
+     
+           a.attr("data-name", places[i]);
+
+           a.text(places[i]);
+
+           $("#buttons-view").append(a);
+         }
+       }
+
+       $("#add-place").on("click", function(event) {
+
+         event.preventDefault();
+
+        
+         var place = $("#place-input").val().trim();
+        
+         places.push(place);
+
+
+         renderButtons();
+       });
+
+
+       renderButtons();
+
+     $("#place-input").val();
+
+     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+         place + "&api_key=2RfEMCnYj5hOWIB165bg7UXQPDOx45ka";
+
+ $.ajax({
+   url: queryURL,
+   method: "GET"
+ }).then(function(response) {
+   $("#buttons-view").text(JSON.stringify(response));
+})
+
+ .then(function(response) {       
+  
+           var results = response.data;
+
+           
+           for (var i = 0; i < results.length; i++) {
+             
+               var gifDiv = $("<div>");
+               var rating = results[i].rating;
+               var p = $("<p>").text("Rating: " + rating);
+               var placeImage = $("<img>");
+               placeImage.attr("src", results[i].images.fixed_height.url);
+
+              
+           
+               gifDiv.append(p);
+               gifDiv.append(placeImage);
+
+              
+               $("#gifs-appear-here").prepend(gifDiv);
+             }
+           });
+
+     </script>
+   </div>
+ </body>
+
+</html> 
